@@ -29,29 +29,51 @@ int main() {
                    ".function { color: yellow; }\n"
                    "</style>\n</head>\n<body>\n<pre>\n";
 
-    std::regex reOperators(R"([\+\-\*\/])");
+    std::regex reOperators(R"([\+\-\*])");
     std::regex reConditionals(R"(\b(if|else)\b)");
     std::regex reLoops(R"(\b(while|for)\b)");
-    std::regex reComments(R"(\/\/[^\n]*)");
+    std::regex reComments(R"(\/\/.*[^\n])");
     std::regex reStrings(R"(".*?")");
     std::regex reBooleans(R"(\b(true|false)\b)");
-    std::regex reDatatypes(R"(\b(string|int|float|bool)\b)");
+    std::regex reDatatypes(R"(\b(int|float|bool)\b)");
     std::regex reAccessKeywords(R"(\b(public|private|protected)\b)");
     std::regex reFunctions(R"(\b(\w+)\s*\()");
 
     while (getline(inFile, line)) {
-        line = std::regex_replace(line, reStrings, "<span class='string'>$&</span>");
-        line = std::regex_replace(line, reComments, "<span class='comment'>$&</span>");
-        line = std::regex_replace(line, reOperators, "<span class='operator'>$&</span>");
-        line = std::regex_replace(line, reConditionals, "<span class='conditional'>$&</span>");
-        line = std::regex_replace(line, reLoops, "<span class='loop'>$&</span>");
-        line = std::regex_replace(line, reBooleans, "<span class='boolean'>$&</span>");
-        line = std::regex_replace(line, reDatatypes, "<span class='datatype'>$&</span>");
-        line = std::regex_replace(line, reAccessKeywords, "<span class='access'>$&</span>");
-        line = std::regex_replace(line, reFunctions, "<span class='function'>$1</span>(");
+        size_t commentPos = line.find("//");
+        string codeBeforeComment;
+
+        if (commentPos != string::npos) {
+            // Extract the code part before the comment starts
+            codeBeforeComment = line.substr(0, commentPos);
+            // Append the comment part as is, with comment highlighting
+            line = codeBeforeComment + "<span class='comment'>" + line.substr(commentPos) + "</span>";
+        } else {
+            codeBeforeComment = line;
+        }
+
+        // First handle string literals in the non-comment part
+        codeBeforeComment = std::regex_replace(codeBeforeComment, reStrings, "<span class='string'>$&</span>");
+
+        // Handle operators only in the non-comment part
+        codeBeforeComment = std::regex_replace(codeBeforeComment, reOperators, "<span class='operator'>$&</span>");
+        codeBeforeComment = std::regex_replace(codeBeforeComment, reConditionals, "<span class='conditional'>$&</span>");
+        codeBeforeComment = std::regex_replace(codeBeforeComment, reLoops, "<span class='loop'>$&</span>");
+        codeBeforeComment = std::regex_replace(codeBeforeComment, reBooleans, "<span class='boolean'>$&</span>");
+        codeBeforeComment = std::regex_replace(codeBeforeComment, reDatatypes, "<span class='datatype'>$&</span>");
+        codeBeforeComment = std::regex_replace(codeBeforeComment, reAccessKeywords, "<span class='access'>$&</span>");
+        codeBeforeComment = std::regex_replace(codeBeforeComment, reFunctions, "<span class='function'>$1</span>(");
+
+        if (commentPos != string::npos) {
+            // Reconstruct the full line with highlighted comment
+            line = codeBeforeComment + line.substr(codeBeforeComment.size());
+        } else {
+            line = codeBeforeComment;
+        }
 
         htmlContent << line << '\n';
     }
+
 
     htmlContent << "</pre>\n</body>\n</html>";
 
