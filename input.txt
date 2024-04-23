@@ -1,0 +1,27 @@
+#include <iostream>
+#include <string>
+
+// Function to add two numbers and return the result
+int add(int num1, int num2) {
+    return num1 + num2;
+}
+
+int main() {
+    int a, b;
+    std::string response;
+
+    // Ask user for two numbers
+    std::cout << "Enter the first number: ";
+    std::cin >> a;
+    std::cout << "Enter the second number: ";
+    std::cin >> b;
+
+    // Perform addition using the add function
+    int result = add(a, b);
+
+    // Create a response string and output it
+    response = "The sum of " + std::to_string(a) + " and " + std::to_string(b) + " is " + std::to_string(result) + ".";
+    std::cout << response << std::endl;
+
+    return 0;
+}

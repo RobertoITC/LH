@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.operator { color: red; }
+.conditional { color: darkblue; }
+.loop { color: lightblue; }
+.comment { color: green; }
+.string { color: orange; }
+.boolean { color: purple; }
+.datatype { color: pink; }
+.access { color: darkred; }
+.function { color: yellow; }
+</style>
+</head>
+<body>
+<pre>
+#include <iostream>
+#include <<span class='datatype'>string</span>>
+
+<span class='comment'><span class='operator'>/</span><span class='operator'>/</span> Function to add two numbers and return the result<<span class='operator'>/</span>span>
+<span class='datatype'>int</span> <span class='function'>add</span>(<span class='datatype'>int</span> num1, <span class='datatype'>int</span> num2) {
+    return num1 <span class='operator'>+</span> num2;
+}
+
+<span class='datatype'>int</span> <span class='function'>main</span>() {
+    <span class='datatype'>int</span> a, b;
+    std::<span class='datatype'>string</span> response;
+
+    <span class='comment'><span class='operator'>/</span><span class='operator'>/</span> Ask user <span class='loop'>for</span> two numbers<<span class='operator'>/</span>span>
+    std::cout << <span class='<span class='datatype'>string</span>'>"Enter the first number: "<<span class='operator'>/</span>span>;
+    std::cin >> a;
+    std::cout << <span class='<span class='datatype'>string</span>'>"Enter the second number: "<<span class='operator'>/</span>span>;
+    std::cin >> b;
+
+    <span class='comment'><span class='operator'>/</span><span class='operator'>/</span> Perform addition using the add function<<span class='operator'>/</span>span>
+    <span class='datatype'>int</span> result = <span class='function'>add</span>(a, b);
+
+    <span class='comment'><span class='operator'>/</span><span class='operator'>/</span> Create a response <span class='datatype'>string</span> and output it<<span class='operator'>/</span>span>
+    response = <span class='<span class='datatype'>string</span>'>"The sum of "<<span class='operator'>/</span>span> <span class='operator'>+</span> std::<span class='function'>to_string</span>(a) <span class='operator'>+</span> <span class='<span class='datatype'>string</span>'>" and "<<span class='operator'>/</span>span> <span class='operator'>+</span> std::<span class='function'>to_string</span>(b) <span class='operator'>+</span> <span class='<span class='datatype'>string</span>'>" is "<<span class='operator'>/</span>span> <span class='operator'>+</span> std::<span class='function'>to_string</span>(result) <span class='operator'>+</span> <span class='<span class='datatype'>string</span>'>"."<<span class='operator'>/</span>span>;
+    std::cout << response << std::endl;
+
+    return 0;
+}
+</pre>
+</body>
+</html>
