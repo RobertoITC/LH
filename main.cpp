@@ -29,7 +29,7 @@ int main() {
                    ".function { color: yellow; }\n"
                    "</style>\n</head>\n<body>\n<pre>\n";
 
-    std::regex reOperators(R"([\+\-\*])");
+    std::regex reOperators(R"([\+\-\*]|\<\<|\>\>)");
     std::regex reConditionals(R"(\b(if|else)\b)");
     std::regex reLoops(R"(\b(while|for)\b)");
     std::regex reComments(R"(\/\/.*[^\n])");
@@ -38,24 +38,20 @@ int main() {
     std::regex reDatatypes(R"(\b(int|float|bool)\b)");
     std::regex reAccessKeywords(R"(\b(public|private|protected)\b)");
     std::regex reFunctions(R"(\b(\w+)\s*\()");
+    std::regex reSlash(R"([^<]\/[^s])");
 
     while (getline(inFile, line)) {
         size_t commentPos = line.find("//");
         string codeBeforeComment;
 
         if (commentPos != string::npos) {
-            // Extract the code part before the comment starts
             codeBeforeComment = line.substr(0, commentPos);
-            // Append the comment part as is, with comment highlighting
             line = codeBeforeComment + "<span class='comment'>" + line.substr(commentPos) + "</span>";
         } else {
             codeBeforeComment = line;
         }
-
-        // First handle string literals in the non-comment part
         codeBeforeComment = std::regex_replace(codeBeforeComment, reStrings, "<span class='string'>$&</span>");
-
-        // Handle operators only in the non-comment part
+        codeBeforeComment = std::regex_replace(codeBeforeComment, reSlash,"<span class='operator'>$&</span>");
         codeBeforeComment = std::regex_replace(codeBeforeComment, reOperators, "<span class='operator'>$&</span>");
         codeBeforeComment = std::regex_replace(codeBeforeComment, reConditionals, "<span class='conditional'>$&</span>");
         codeBeforeComment = std::regex_replace(codeBeforeComment, reLoops, "<span class='loop'>$&</span>");
@@ -65,24 +61,16 @@ int main() {
         codeBeforeComment = std::regex_replace(codeBeforeComment, reFunctions, "<span class='function'>$1</span>(");
 
         if (commentPos != string::npos) {
-            // Reconstruct the full line with highlighted comment
             line = codeBeforeComment + line.substr(codeBeforeComment.size());
         } else {
             line = codeBeforeComment;
         }
-
         htmlContent << line << '\n';
     }
-
-
     htmlContent << "</pre>\n</body>\n</html>";
-
     outFile << htmlContent.str();
-
     inFile.close();
     outFile.close();
-
     cout << "Output generado" <<endl;
-
     return 0;
 }
