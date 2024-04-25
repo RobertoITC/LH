@@ -1,1 +1,1 @@
-No funciona el fucking / operador todavía
+Ya funciona todo
