@@ -6,8 +6,8 @@
 using namespace std;
 
 int main() {
-    ifstream inFile("/Users/robertomoralesnieto/CLionProjects/LHmaybe/input.txt");
-    ofstream outFile("/Users/robertomoralesnieto/CLionProjects/LHmaybe/output.html");
+    ifstream inFile("input.txt");
+    ofstream outFile("output.html");
 
     if (!inFile.is_open()) {
         cerr << "No se pudo abrir input.txt" << endl;
